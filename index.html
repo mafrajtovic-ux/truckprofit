@@ -1,306 +1,433 @@
+
 <!DOCTYPE html>
 <html lang="sr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TruckProfit</title>
-
+<title>TruckProfit V2 — Kalkulator profita</title>
 <style>
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #0d1117;
-    color: white;
+:root{
+  --bg:#0b0d10;
+  --card:#14181d;
+  --card2:#1a1f25;
+  --line:#2a3038;
+  --text:#f4f6f8;
+  --muted:#929aa5;
+  --orange:#ff7a00;
+  --green:#20c978;
+  --red:#ff4d5e;
+  --blue:#4da3ff;
 }
-
-.container {
-    max-width: 900px;
-    margin: auto;
-    padding: 25px;
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Inter,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
 }
-
-h1 {
-    font-size: 38px;
-    margin-bottom: 5px;
+button,input,select{font:inherit}
+button{cursor:pointer}
+header{
+  padding:22px 18px;
+  border-bottom:1px solid var(--line);
+  background:#0d1014;
+  position:sticky;
+  top:0;
+  z-index:10;
 }
-
-.logo {
-    color: #ffb000;
+.logo{
+  font-size:25px;
+  font-weight:900;
 }
-
-.subtitle {
-    color: #9da7b3;
-    margin-bottom: 30px;
+.logo span{color:var(--orange)}
+.tagline{
+  color:var(--muted);
+  font-size:12px;
+  margin-top:4px;
 }
-
-.card {
-    background: #161b22;
-    border: 1px solid #30363d;
-    border-radius: 14px;
-    padding: 20px;
-    margin-bottom: 20px;
+.container{
+  max-width:1150px;
+  margin:auto;
+  padding:18px;
 }
-
-.grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
+.nav{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  margin-bottom:18px;
 }
-
-label {
-    display: block;
-    color: #9da7b3;
-    font-size: 14px;
-    margin-bottom: 6px;
+.nav button{
+  border:1px solid var(--line);
+  background:var(--card);
+  color:var(--muted);
+  padding:11px 15px;
+  border-radius:10px;
+  white-space:nowrap;
 }
-
-input {
-    width: 100%;
-    padding: 12px;
-    box-sizing: border-box;
-    background: #0d1117;
-    border: 1px solid #30363d;
-    border-radius: 8px;
-    color: white;
+.nav button.active{
+  background:var(--orange);
+  color:#111;
+  border-color:var(--orange);
+  font-weight:800;
 }
-
-button {
-    margin-top: 20px;
-    padding: 13px 20px;
-    border: none;
-    border-radius: 8px;
-    background: #ffb000;
-    color: #111;
-    font-weight: bold;
-    cursor: pointer;
+.page{display:none}
+.page.active{display:block}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:15px;
 }
-
-.results {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+.grid3{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:15px;
 }
-
-.result {
-    background: #0d1117;
-    padding: 15px;
-    border-radius: 10px;
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:15px;
+  padding:18px;
 }
-
-.result span {
-    color: #9da7b3;
-    font-size: 13px;
+.card h2{
+  margin:0 0 15px;
+  font-size:18px;
 }
-
-.result strong {
-    display: block;
-    font-size: 22px;
-    margin-top: 6px;
+label{
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  margin:12px 0 6px;
 }
-
-@media(max-width:650px) {
-    .grid,
-    .results {
-        grid-template-columns: 1fr;
-    }
+input,select{
+  width:100%;
+  background:#0e1115;
+  border:1px solid var(--line);
+  color:var(--text);
+  padding:12px;
+  border-radius:9px;
+  outline:none;
+}
+input:focus,select:focus{
+  border-color:var(--orange);
+}
+.btn{
+  border:0;
+  border-radius:10px;
+  padding:12px 16px;
+  font-weight:800;
+}
+.primary{
+  background:var(--orange);
+  color:#111;
+}
+.secondary{
+  background:var(--card2);
+  color:var(--text);
+  border:1px solid var(--line);
+}
+.danger{
+  background:#35151a;
+  color:#ff7d89;
+  border:1px solid #63212b;
+}
+.actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:16px;
+}
+.stat{
+  background:var(--card2);
+  border:1px solid var(--line);
+  padding:15px;
+  border-radius:12px;
+}
+.stat .name{
+  color:var(--muted);
+  font-size:11px;
+}
+.stat .value{
+  font-size:23px;
+  font-weight:900;
+  margin-top:5px;
+}
+.green{color:var(--green)}
+.red{color:var(--red)}
+.orange{color:var(--orange)}
+.blue{color:var(--blue)}
+.result{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+.vehicle{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+.vehicle-info strong{
+  display:block;
+  font-size:16px;
+}
+.vehicle-info span{
+  color:var(--muted);
+  font-size:12px;
+}
+.empty{
+  color:var(--muted);
+  text-align:center;
+  padding:30px 10px;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+th,td{
+  text-align:left;
+  padding:11px 8px;
+  border-bottom:1px solid var(--line);
+  font-size:13px;
+}
+th{color:var(--muted)}
+.small{
+  font-size:11px;
+  color:var(--muted);
+}
+.hero{
+  padding:22px;
+  border-radius:16px;
+  background:linear-gradient(135deg,#171b20,#101317);
+  border:1px solid var(--line);
+  margin-bottom:15px;
+}
+.hero h1{
+  margin:0;
+  font-size:27px;
+}
+.hero p{
+  color:var(--muted);
+  margin-bottom:0;
+}
+.notice{
+  padding:11px;
+  border-radius:9px;
+  background:#211a10;
+  border:1px solid #4c3215;
+  color:#e9bd7b;
+  font-size:12px;
+  margin-top:12px;
+}
+@media(max-width:750px){
+  .grid,.grid3{grid-template-columns:1fr}
+  .result{grid-template-columns:1fr 1fr}
+  .container{padding:12px}
 }
 </style>
 </head>
 
 <body>
 
+<header>
+  <div class="logo">Truck<span>Profit</span></div>
+  <div class="tagline">Pre nego što prihvatiš turu — izračunaj profit.</div>
+</header>
+
 <div class="container">
 
-<h1>Truck<span class="logo">Profit</span></h1>
-
-<div class="subtitle">
-Pre nego što prihvatiš turu — izračunaj profit.
+<div class="nav">
+  <button class="active" onclick="showPage('dashboard',this)">📊 Dashboard</button>
+  <button onclick="showPage('trip',this)">🛣️ Nova tura</button>
+  <button onclick="showPage('vehicles',this)">🚛 Moja vozila</button>
+  <button onclick="showPage('history',this)">📋 Moje ture</button>
 </div>
 
-<div class="card">
+<!-- DASHBOARD -->
+<section id="dashboard" class="page active">
+  <div class="hero">
+    <h1>TruckProfit V2</h1>
+    <p>Brzo izračunaj da li se tura isplati.</p>
+  </div>
 
-<h2>Kalkulator ture</h2>
+  <div class="grid3">
+    <div class="stat">
+      <div class="name">UKUPAN PRIHOD</div>
+      <div class="value orange" id="dashRevenue">0 RSD</div>
+    </div>
+    <div class="stat">
+      <div class="name">UKUPNI TROŠKOVI</div>
+      <div class="value" id="dashCosts">0 RSD</div>
+    </div>
+    <div class="stat">
+      <div class="name">UKUPAN PROFIT</div>
+      <div class="value green" id="dashProfit">0 RSD</div>
+    </div>
+  </div>
+
+  <br>
+
+  <div class="grid3">
+    <div class="stat">
+      <div class="name">UKUPNO KM</div>
+      <div class="value" id="dashKm">0 km</div>
+    </div>
+    <div class="stat">
+      <div class="name">PROSEČAN PROFIT / KM</div>
+      <div class="value blue" id="dashProfitKm">0 RSD</div>
+    </div>
+    <div class="stat">
+      <div class="name">PROSEČNA MARŽA</div>
+      <div class="value" id="dashMargin">0%</div>
+    </div>
+  </div>
+
+  <br>
+
+  <div class="card">
+    <h2>Kako radi TruckProfit?</h2>
+    <p class="small">
+      Unesi svoj kamion, troškove i ponuđenu cenu ture.
+      TruckProfit računa gorivo, putarine, održavanje, AdBlue,
+      vozača i ostale troškove i pokazuje koliko ti stvarno ostaje.
+    </p>
+  </div>
+</section>
+
+<!-- NOVA TURA -->
+<section id="trip" class="page">
+
+<div class="card">
+<h2>🛣️ Nova tura</h2>
+
+<label>Vozilo</label>
+<select id="tripVehicle" onchange="loadVehicleToTrip()">
+<option value="">— Ručno uneseno vozilo —</option>
+</select>
 
 <div class="grid">
-
 <div>
 <label>Ukupno kilometara</label>
-<input id="km" type="number" value="650">
+<input id="km" type="number" value="500" oninput="calculate()">
 </div>
 
 <div>
 <label>Potrošnja (L/100 km)</label>
-<input id="consumption" type="number" value="28">
+<input id="consumption" type="number" value="28" step="0.1" oninput="calculate()">
 </div>
 
 <div>
-<label>Cena dizela (RSD/L)</label>
-<input id="fuelPrice" type="number" value="183">
+<label>Cena goriva (RSD/L)</label>
+<input id="fuelPrice" type="number" value="183" step="0.01" oninput="calculate()">
 </div>
 
 <div>
-<label>Putarine (RSD)</label>
-<input id="toll" type="number" value="12000">
+<label>Putarine</label>
+<input id="toll" type="number" value="0" oninput="calculate()">
 </div>
 
 <div>
-<label>Vozač / dnevnice (RSD)</label>
-<input id="driver" type="number" value="15000">
+<label>Vozač / dnevnice</label>
+<input id="driver" type="number" value="0" oninput="calculate()">
 </div>
 
 <div>
 <label>Održavanje (RSD/km)</label>
-<input id="maintenance" type="number" value="18">
+<input id="maintenance" type="number" value="10" step="0.1" oninput="calculate()">
 </div>
 
 <div>
-<label>AdBlue (RSD)</label>
-<input id="adblue" type="number" value="0">
+<label>AdBlue (RSD/km)</label>
+<input id="adblue" type="number" value="2" step="0.1" oninput="calculate()">
 </div>
 
 <div>
-<label>Ostali troškovi (RSD)</label>
-<input id="other" type="number" value="0">
+<label>Gume (RSD/km)</label>
+<input id="tires" type="number" value="3" step="0.1" oninput="calculate()">
 </div>
 
 <div>
-<label>Ponuđena cena ture (RSD)</label>
-<input id="price" type="number" value="90000">
+<label>Utovar / istovar</label>
+<input id="loading" type="number" value="0" oninput="calculate()">
+</div>
+
+<div>
+<label>Čekanje / parking / trajekt</label>
+<input id="waiting" type="number" value="0" oninput="calculate()">
+</div>
+
+<div>
+<label>Ostali troškovi</label>
+<input id="other" type="number" value="0" oninput="calculate()">
+</div>
+
+<div>
+<label>Ponuđena cena ture</label>
+<input id="price" type="number" value="90000" oninput="calculate()">
 </div>
 
 <div>
 <label>Ciljana marža (%)</label>
-<input id="margin" type="number" value="20">
+<input id="targetMargin" type="number" value="20" step="0.1" oninput="calculate()">
+</div>
 </div>
 
+<div class="notice">
+Troškovi vozila kao što su rata, registracija i plata mogu se uključiti kroz „Moja vozila“.
 </div>
 
-<button onclick="calculate()">IZRAČUNAJ PROFIT</button>
-
+<div class="actions">
+<button class="btn primary" onclick="saveTrip()">💾 Sačuvaj turu</button>
+<button class="btn secondary" onclick="resetTrip()">↻ Resetuj</button>
 </div>
+</div>
+
+<br>
 
 <div class="card">
-
-<h2>Rezultat</h2>
-
-<div class="results">
+<h2>📊 Rezultat ture</h2>
 
 <div class="result">
-<span>Gorivo</span>
-<strong id="fuelCost">0 RSD</strong>
+<div class="stat">
+<div class="name">GORIVO</div>
+<div class="value" id="rFuel">0 RSD</div>
 </div>
 
-<div class="result">
-<span>Ukupan trošak</span>
-<strong id="totalCost">0 RSD</strong>
+<div class="stat">
+<div class="name">UKUPAN TROŠAK</div>
+<div class="value" id="rCost">0 RSD</div>
 </div>
 
-<div class="result">
-<span>Profit / gubitak</span>
-<strong id="profit">0 RSD</strong>
+<div class="stat">
+<div class="name">PROFIT / GUBITAK</div>
+<div class="value" id="rProfit">0 RSD</div>
 </div>
 
-<div class="result">
-<span>Trošak po km</span>
-<strong id="costKm">0 RSD</strong>
+<div class="stat">
+<div class="name">TROŠAK / KM</div>
+<div class="value" id="rCostKm">0 RSD</div>
 </div>
 
-<div class="result">
-<span>Profit po km</span>
-<strong id="profitKm">0 RSD</strong>
+<div class="stat">
+<div class="name">PROFIT / KM</div>
+<div class="value" id="rProfitKm">0 RSD</div>
 </div>
 
-<div class="result">
-<span>Stvarna marža</span>
-<strong id="actualMargin">0%</strong>
+<div class="stat">
+<div class="name">STVARNA MARŽA</div>
+<div class="value" id="rMargin">0%</div>
 </div>
 
-<div class="result">
-<span>Minimalna cena za ciljanu maržu</span>
-<strong id="minimumPrice">0 RSD</strong>
+<div class="stat">
+<div class="name">MINIMALNA CENA ZA CILJANU MARŽU</div>
+<div class="value orange" id="rMinPrice">0 RSD</div>
 </div>
 
+<div class="stat">
+<div class="name">DODATNI PROFIT ZA 10.000 RSD VEĆU CENU</div>
+<div class="value green">10.000 RSD</div>
 </div>
-
 </div>
-
 </div>
+</section>
 
-<script>
-
-function money(value) {
-    return Math.round(value).toLocaleString("sr-RS") + " RSD";
-}
-
-function calculate() {
-
-    const km = Number(document.getElementById("km").value) || 0;
-    const consumption = Number(document.getElementById("consumption").value) || 0;
-    const fuelPrice = Number(document.getElementById("fuelPrice").value) || 0;
-    const toll = Number(document.getElementById("toll").value) || 0;
-    const driver = Number(document.getElementById("driver").value) || 0;
-    const maintenance = Number(document.getElementById("maintenance").value) || 0;
-    const adblue = Number(document.getElementById("adblue").value) || 0;
-    const other = Number(document.getElementById("other").value) || 0;
-    const price = Number(document.getElementById("price").value) || 0;
-    const margin = Number(document.getElementById("margin").value) || 0;
-
-    const fuelCost =
-        km * consumption / 100 * fuelPrice;
-
-    const maintenanceCost =
-        km * maintenance;
-
-    const totalCost =
-        fuelCost +
-        maintenanceCost +
-        toll +
-        driver +
-        adblue +
-        other;
-
-    const profit =
-        price - totalCost;
-
-    const costKm =
-        km > 0 ? totalCost / km : 0;
-
-    const profitKm =
-        km > 0 ? profit / km : 0;
-
-    const actualMargin =
-        price > 0 ? profit / price * 100 : 0;
-
-    const minimumPrice =
-        margin < 100
-        ? totalCost / (1 - margin / 100)
-        : 0;
-
-    document.getElementById("fuelCost").innerText =
-        money(fuelCost);
-
-    document.getElementById("totalCost").innerText =
-        money(totalCost);
-
-    document.getElementById("profit").innerText =
-        money(profit);
-
-    document.getElementById("costKm").innerText =
-        money(costKm);
-
-    document.getElementById("profitKm").innerText =
-        money(profitKm);
-
-    document.getElementById("actualMargin").innerText =
-        actualMargin.toFixed(1) + "%";
-
-    document.getElementById("minimumPrice").innerText =
-        money(minimumPrice);
-}
-
-calculate();
-
-</script>
-
-</body>
-</html>
+<!--
